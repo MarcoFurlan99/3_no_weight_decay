@@ -8,8 +8,7 @@ As you can see I set weight decay to 0.
 
 Let's compare first and foremost how the results changed. These results are referred to a SINGLE set of datasets, specifically the one where $\mu_2 - \mu_1 = 80$, and therefore should NOT be taken too generally. So, in this specific case shown here:
 
-
-![alt text](https://github.com/MarcoFurlan99/3_no_weight_decay/blob/master/images/samples.png?raw=true)
+<img src="https://github.com/MarcoFurlan99/3_no_weight_decay/blob/master/images/samples.png?raw=true" width=30% height=30%>
 
 There are the results:
 
@@ -23,13 +22,11 @@ WITHOUT weight decay:
 
 WITH weight decay:
 
-<img src="https://github.com/MarcoFurlan99/3_no_weight_decay/blob/master/images/pred_with_wd.png?raw=true" width=50% height=50%>
-
-![alt text](https://github.com/MarcoFurlan99/3_no_weight_decay/blob/master/images/pred_with_wd.png?raw=true)
+<img src="https://github.com/MarcoFurlan99/3_no_weight_decay/blob/master/images/pred_with_wd.png?raw=true" width=30% height=30%>
 
 WITHOUT weight decay:
 
-![alt text](https://github.com/MarcoFurlan99/3_no_weight_decay/blob/master/images/pred_without_wd.png?raw=true)
+<img src="https://github.com/MarcoFurlan99/3_no_weight_decay/blob/master/images/pred_without_wd.png?raw=true" width=30% height=30%>
 
 So results seem to be more or less analogous in this specific example.
 
