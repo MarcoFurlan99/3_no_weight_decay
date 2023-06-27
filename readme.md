@@ -7,7 +7,3 @@ As you can see I seet weight decay to 0.
 Let's compare first and foremost how the results changed. This is WEIGHT DECAY = 1e-8:
 
 ![alt text](https://github.com/MarcoFurlan99/3_no_weight_decay/blob/master/parameters.png?raw=true)
-
-
-
-
