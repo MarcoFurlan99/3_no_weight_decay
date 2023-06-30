@@ -42,45 +42,49 @@ And here are the first 12 dimensions:
 
 ![alt text](https://github.com/MarcoFurlan99/3_no_weight_decay/blob/master/images/per_dimension_ls.png?raw=true)
 
-We get finally the nice normal distibution we were looking for FOR THIS SPECIFIC DATASET (the first one, $(\mu_1, \mu_2) = (10,90)$ ), of course we are seeing it after the ReLU.
+We get finally the nice normal distibution we were looking for FOR THIS SPECIFIC DATASET (the first one, $(\mu_1, \mu_2) = (10,90)$ ), of course we are seeing it after the ReLU. I will check with more datasets.
 
-# looking for a distance to predict BN adaptation
+# Looking for a distance to predict BN adaptation
 
-It came natural to check the behaviour before the ReLU. After a little more coding here's what I found:
+It came natural to check the behaviour right before the ReLU. After a little more coding here's what I found: the following are the first 12 dimensions of the latent space obtained feeding the 500 test images with parameters $(\mu_1, \mu_2) = (10,90)$ to the UNet traied on 5000 training images of parameters $(\mu_1, \mu_2) = (10,90)$:
 
 ![alt text](https://github.com/MarcoFurlan99/3_no_weight_decay/blob/master/images/per_dimension_noReLU.png?raw=true)
 
-Very nice looking distributions! Just for clarity: these were done on the TEST set with the same parameters $(\mu_1, \mu_2) = (10,90)$. So it's not the training set, but by the looks of the graph with the ReLU train and test have similar output histograms.
+Very nice looking distributions! Just for clarity: we are in the last latent space, right AFTER the batch norm and right BEFORE the ReLU.
 
 So where do we go from here? Here's my idea: we take the latent space histograms for not only the source dataset, but also for the target datasets and see if they behave differently. The following results are all taken WITHOUT batch norm adaptation (will do results also with).
 
 dimension 0
-<img src="https://github.com/MarcoFurlan99/3_no_weight_decay/blob/master/images/hists_dim0.png?raw=true" width=50% height=50%>
+
+<img src="https://github.com/MarcoFurlan99/3_no_weight_decay/blob/master/images/hists_dim0.png?raw=true">
 
 dimension 1
-<img src="https://github.com/MarcoFurlan99/3_no_weight_decay/blob/master/images/hists_dim1.png?raw=true" width=50% height=50%>
+
+<img src="https://github.com/MarcoFurlan99/3_no_weight_decay/blob/master/images/hists_dim1.png?raw=true">
 
 dimension 2
-<img src="https://github.com/MarcoFurlan99/3_no_weight_decay/blob/master/images/hists_dim2.png?raw=true" width=50% height=50%>
+
+<img src="https://github.com/MarcoFurlan99/3_no_weight_decay/blob/master/images/hists_dim2.png?raw=true">
 
 dimension 3
-<img src="https://github.com/MarcoFurlan99/3_no_weight_decay/blob/master/images/hists_dim3.png?raw=true" width=50% height=50%>
 
-For reference, the above graph corresponds to these graphs:
+<img src="https://github.com/MarcoFurlan99/3_no_weight_decay/blob/master/images/hists_dim3.png?raw=true">
 
-<img src="https://github.com/MarcoFurlan99/3_no_weight_decay/blob/master/images/pred_without_wd.png?raw=true">
+For reference, the above graphs correspond index by index to these graphs:
 
-So my idea is now to compute some distance between the histograms to find a correlation with the BN improvement (right-most graph). The histograms show a difference which looks more and more evident the further the target datasset is from the source dataset; let's try and see hohw far we get.
+<img src="https://github.com/MarcoFurlan99/3_no_weight_decay/blob/master/images/without_weight_decay.png?raw=true">
 
-I did not consider the Wasserstein for clear reasons (the graphs above are not normal in general, and are nothing but the projections of the 1024-dim distributions). One intuitive candidate that I found was the Bhattacharyya distance, which has a simple and intuitive way to calculate distance between sampled distributions using histograms (see [here](https://en.wikipedia.org/wiki/Bhattacharyya_distance) under applications). Essentially it works like this:
+So my idea is now to compute some distance between the histograms to find a correlation with the BN improvement (right-most graph). The histograms show a difference which looks more and more evident the further the target dataset is from the source dataset; let's try and see how far we get.
 
-Given two distributions $P,Q$, bin them into $n$ buckets, and let the frequency of samples from $P$ in bucket $i$ be $p_i$, and similarly $q_i$, then wee can compute the **sample Bhattacharyya coefficient**:
+I did not consider the Wasserstein for clear reasons (the histograms above are not normal in general, and are nothing but the projections of the 1024-dim distributions). One intuitive candidate that I found was the Bhattacharyya distance, which has a simple and intuitive way to calculate distance between sampled distributions using histograms (see [here](https://en.wikipedia.org/wiki/Bhattacharyya_distance) under "Applications"). Essentially it works like this:
+
+Given two distributions $P,Q$, bin them into $n$ buckets, and let the frequency of samples from $P$ in bucket $i$ be $p_i$, and similarly $q_i$, then we can compute the **sample Bhattacharyya coefficient**:
 
 $BC(p,q) = \sum\limits_{i=1}^{n} \sqrt{p_i q_i}$
 
 The **sample Bhattacharyya distance** is then defined as:
 
-$D_B(p,q) = -\ln (BC(P,Q)) $
+$D_B(p,q) = -\ln (BC(p,q)) $
 
 In my case more specifically I compute it in a slightly different but equivalent way: call $P_i,Q_i$ the amount of samples falling in the $i$-th bin, then it holds that $p_i = P_i / \sum_i P_i$ and $q_i = Q_i / \sum_i Q_i$. Consequently:
 
@@ -88,21 +92,26 @@ $BC(p,q) = \sum\limits_{i=1}^{n} \sqrt{p_i q_i} = \sum\limits_{i=1}^{n} \sqrt{P_
 
 The last expression is how I computed it.
 
-Following are some results. I look the log(1+distance*100) for simple rescaling purposes.
+Following are some results. I took the log(1+distance*100) for simple rescaling purposes.
 
 dim3
+
 <img src="https://github.com/MarcoFurlan99/3_no_weight_decay/blob/master/images/Bhattacharyya_proc_dim3.png?raw=true" width=50% height=50%>
 
 dim19
+
 <img src="https://github.com/MarcoFurlan99/3_no_weight_decay/blob/master/images/Bhattacharyya_proc_dim19.png?raw=true" width=50% height=50%>
 
 dim121
+
 <img src="https://github.com/MarcoFurlan99/3_no_weight_decay/blob/master/images/Bhattacharyya_proc_dim121.png?raw=true" width=50% height=50%>
 
 dim131
+
 <img src="https://github.com/MarcoFurlan99/3_no_weight_decay/blob/master/images/Bhattacharyya_proc_dim131.png?raw=true" width=50% height=50%>
 
 dim171
+
 <img src="https://github.com/MarcoFurlan99/3_no_weight_decay/blob/master/images/Bhattacharyya_proc_dim171.png?raw=true" width=50% height=50%>
 
 Close but not quite there. I'm working more on this, more results coming soon!
