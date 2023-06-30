@@ -86,7 +86,7 @@ The **sample Bhattacharyya distance** is then defined as:
 
 $D_B(p,q) = -\ln (BC(p,q)) $
 
-In my case more specifically I compute it in a slightly different but equivalent way: call $P_i,Q_i$ the amount of samples falling in the $i$-th bin, then it holds that $p_i = P_i / \sum_i P_i$ and $q_i = Q_i / \sum_i Q_i$. Consequently:
+In my case more specifically I compute it in a slightly different but equivalent way: call $P_i,Q_i$ the amount of samples falling in the $i$-th bin, then it holds that $p_i = P_i / \sum_j P_j$ and $q_i = Q_i / \sum_j Q_j$. Consequently:
 
 $BC(p,q) = \sum\limits_{i=1}^{n} \sqrt{p_i q_i} = \sum\limits_{i=1}^{n} \sqrt{P_i Q_i (\sum_j P_j \sum_j Q_j)^{-1}} = (\sum_j P_j \sum_j Q_j)^{-1} \sum\limits_{i=1}^{n} \sqrt{P_i Q_i}$
 
