@@ -114,4 +114,4 @@ dim171
 
 <img src="https://github.com/MarcoFurlan99/3_no_weight_decay/blob/master/images/Bhattacharyya_proc_dim171.png?raw=true" width=50% height=50%>
 
-Close but not quite there. I'm working more on this, more results coming soon!
+Recall that we want a predictor for the "Difference between the two graphs" graph. So we are close but not quite there. I'm working more on this, more results coming soon!
