@@ -126,5 +126,7 @@ Recall that we want a predictor for the "Difference between the two graphs" grap
 
  $\sigma = \sqrt{\frac{1}{N-1}\sum\limits_{i=0}^{N-1}(x_i - \bar x)^2}$
 
+See bessel.ipynb for a simple model that shows it.
+
 This implies that the std of the output, computed per-channel (aka per-feature, aka on the C dimension in  a BxCxWxH tensor), is NOT 1 (as would be with Bessel's correction). This is not a problem as far as I know, just a thing to keep in mind.
 
