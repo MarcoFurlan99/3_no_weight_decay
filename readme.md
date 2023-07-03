@@ -115,3 +115,16 @@ dim171
 <img src="https://github.com/MarcoFurlan99/3_no_weight_decay/blob/master/images/Bhattacharyya_proc_dim171.png?raw=true" width=50% height=50%>
 
 Recall that we want a predictor for the "Difference between the two graphs" graph. So we are close but not quite there. I'm working more on this, more results coming soon!
+
+ There is no Bessel's correction in BatchNorm2d
+
+ With a simple example (file bessel.py) I verified that the batch norm implementation in torch.nn.BatchNorm2d does not use the Bessel's correction in the computation of the standard deviation, essentially it means that the std is computed like this:
+
+ $\sigma = \sqrt{\frac{1}{N}\sum\limits_{i=0}^{N-1}(x_i - \bar x)^2}$
+
+ and not like this:
+
+ $\sigma = \sqrt{\frac{1}{N-1}\sum\limits_{i=0}^{N-1}(x_i - \bar x)^2}$
+
+This implies that the std of the output, computed per-channel (aka per-feature, aka on the C dimension in  a BxCxWxH tensor), is NOT 1 (as would be with Bessel's correction). This is not a problem as far as I know, just a thing to keep in mind.
+
