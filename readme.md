@@ -155,6 +155,6 @@ torch.nn.BatchNorm2d(num_features, eps=1e-05, momentum=0.1, affine=True, track_r
 - num_features is the number of features/channels/dimensions of the input layer (BN is computed per feature, in 2d slices along width x height)
 - eps is a value added to the denominator for numerical stability,
 - track_running_stats is a boolean which determines whether or not the model will take into account the running statistics for $\mu$ and $\sigma^2$. If set to False, $\mu$ and $\sigma^2$ are recomputed at each batch.
-- momentum is a parameter which decides how the running $\mu$ and $\sigma^2$ statistics are used. More specifically, $\hat x_{new} = (1-momentum) \hat x + momentum x_t$, where $\hat x$ is the old estimated statistic, and $x_t$ is the new observed value.
+- momentum is a parameter which decides how the running $\mu$ and $\sigma^2$ statistics are used. More specifically, $\hat x_{new} = (1-momentum) \times \hat x + momentum \times x_t$, where $\hat x$ is the old estimated statistic, and $x_t$ is the new observed value.
 - affine = False will DISABLE $\gamma$ and $\beta$ [from the learning process], essentially setting them as constants to 1 and 0.
 - dtype is not important
