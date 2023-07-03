@@ -116,7 +116,7 @@ dim171
 
 Recall that we want a predictor for the "Difference between the two graphs" graph. So we are close but not quite there. I'm working more on this, more results coming soon!
 
- There is no Bessel's correction in BatchNorm2d
+ # Extra: There is no Bessel's correction in BatchNorm2d
 
  With a simple example (file bessel.py) I verified that the batch norm implementation in torch.nn.BatchNorm2d does not use the Bessel's correction in the computation of the standard deviation, essentially it means that the std is computed like this:
 
