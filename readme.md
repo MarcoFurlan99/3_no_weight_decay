@@ -130,3 +130,31 @@ See bessel.ipynb for a simple model that shows it.
 
 This implies that the std of the output, computed per-channel (aka per-feature, aka on the C dimension in  a BxCxWxH tensor), is NOT 1 (as would be with Bessel's correction). This is not a problem as far as I know, just a thing to keep in mind.
 
+# Extra: alternative way to disable parameter learning
+
+From documentation of BatchNorm2d: "affine (bool) – a boolean value that when set to True, this module has learnable affine parameters. Default: True"
+
+https://discuss.pytorch.org/t/affine-parameter-in-batchnorm/6005
+
+From this forum: "When affine=False the output of BatchNorm is equivalent to considering gamma=1 and beta=0 as constants."
+
+# Extra: BN parameters
+
+The BatchNorm2d layer has a bunch of parameters:
+
+$$y = \frac{x - \mu}{\sqrt{\sigma^2 + \epsilon}} \cdot \gamma + \beta $$
+
+BatchNorm2d has 4 total parameters:
+- 2 calculated "on the run" ($\mu$ and $\sigma^2$),
+- the other 2 are called **affine parameters** ($\gamma$ and $\beta$) and are learnable parameters (during the training of the model, they get accounted for and updated during the backwards phase, according to gradient descent of whatever is implemented).
+
+Let's now see the possible inputs:
+
+torch.nn.BatchNorm2d(num_features, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True, device=None, dtype=None)
+
+- num_features is the number of features/channels/dimensions of the input layer (BN is computed per feature, in 2d slices along width x height)
+- eps is a value added to the denominator for numerical stability,
+- track_running_stats is a boolean which determines whether or not the model will take into account the running statistics for $\mu$ and $\sigma^2$. If set to False, $\mu$ and $\sigma^2$ are recomputed at each batch.
+- momentum is a parameter which decides how the running $\mu$ and $\sigma^2$ statistics are used. More specifically, $\hat x_{new} = (1-momentum) \hat x + momentum x_t$, where $\hat x$ is the old estimated statistic, and $x_t$ is the new observed value.
+- affine = False will DISABLE $\gamma$ and $\beta$ [from the learning process], essentially setting them as constants to 1 and 0.
+- dtype is not important
